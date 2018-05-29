@@ -12,6 +12,7 @@ import { LoginPageModule } from '../pages/login/login.module';
 
 import firebase from 'firebase';
 import { RegistrationPageModule } from '../pages/registration/registration.module';
+import { UserDetailsPageModule } from '../pages/user-details/user-details.module';
 
 var config = {
   apiKey: "AIzaSyDN2sP5-IiKSVzXXBPTYDnZJ0RNtcPr_Gw",
@@ -34,7 +35,8 @@ firebase.initializeApp(config);
     BrowserModule,
     IonicModule.forRoot(MyApp),
     LoginPageModule,
-    RegistrationPageModule
+    RegistrationPageModule,
+    UserDetailsPageModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [

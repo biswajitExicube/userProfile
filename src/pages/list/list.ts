@@ -1,37 +1,48 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams, LoadingController } from 'ionic-angular';
+
+import firebase from 'firebase';
+import { UserDetailsPage } from '../user-details/user-details';
 
 @Component({
   selector: 'page-list',
   templateUrl: 'list.html'
 })
 export class ListPage {
-  selectedItem: any;
-  icons: string[];
-  items: Array<{title: string, note: string, icon: string}>;
+ 
+  public userList : any;
+  constructor(public navCtrl: NavController, public navParams: NavParams, public loadingCtrl: LoadingController) {
+   this.loadUser();
+   let loading = this.loadingCtrl.create({
+    content : 'Please Wait...'
+  });
+  loading.present();
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
-    // If we navigated to this page, we will have an item available as a nav param
-    this.selectedItem = navParams.get('item');
-
-    // Let's populate this page with some filler content for funzies
-    this.icons = ['flask', 'wifi', 'beer', 'football', 'basketball', 'paper-plane',
-    'american-football', 'boat', 'bluetooth', 'build'];
-
-    this.items = [];
-    for (let i = 1; i < 11; i++) {
-      this.items.push({
-        title: 'Item ' + i,
-        note: 'This is item #' + i,
-        icon: this.icons[Math.floor(Math.random() * this.icons.length)]
-      });
-    }
+  setTimeout(() =>{
+    loading.dismiss();
+  }, 1000);
   }
 
-  itemTapped(event, item) {
+  loadUser(){
+    const userRef : firebase.database.Reference =firebase.database().ref('/userProfile/');
+    var currentUser = firebase.auth().currentUser.uid;
+    userRef.on('value', userSnapshot =>{
+      this.userList = [];
+      let singleUser = userSnapshot.val();
+      console.log(singleUser);
+      for(let key in singleUser){
+        singleUser[key].userId = key;
+        if(singleUser[key].userId != currentUser){
+          this.userList.push(singleUser[key]);
+        }
+      }
+      console.log(this.userList);
+    })
+  }
+  itemTapped(event, user) {
     // That's right, we're pushing to ourselves!
-    this.navCtrl.push(ListPage, {
-      item: item
+    this.navCtrl.push(UserDetailsPage, {
+      newUser: user
     });
   }
 }
