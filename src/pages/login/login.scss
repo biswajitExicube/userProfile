@@ -1,0 +1,13 @@
+page-login {
+    .loginContent{
+        ion-grid, ion-row{
+            height: 100%;
+        }
+        button{
+            border-radius: 6px;
+        }
+        ion-item{
+            padding-left: 0px;
+        }
+    }
+}
